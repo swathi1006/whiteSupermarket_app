@@ -384,9 +384,9 @@ class _CartProductCardState extends State<CartProductCard> {*/
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: const Text('Do you want to remove this item from Cart?'),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text('Do you want to remove this item from Cart?'),
             ),
           ],
         ),

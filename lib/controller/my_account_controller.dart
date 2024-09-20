@@ -294,12 +294,12 @@ class MyAccountController extends GetxController {
         trailing: address.isDefault
             ? Container(
                 //child: const Text('Default', style: TextStyle(fontSize: 12),),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 10,),
-              const Icon(Icons.check_box, color: primary, size: 23),
+              Icon(Icons.check_box, color: primary, size: 23),
             ],
           ),
               )
@@ -743,11 +743,17 @@ class MyAccountController extends GetxController {
 
     // Save the PDF file to a temporary directory
     final tempDir = await getTemporaryDirectory();
+    //final tempDir = File("/storage/emulated/0/Download/");
     final pdfFile = File('${tempDir.path}/Invoice_$id.pdf');
     await pdfFile.writeAsBytes(pdfBytes);
 
     // Share the PDF file
-    Share.shareFiles([pdfFile.path], text: 'Invoice for Order ID: $id');
+    //Share.shareFiles([pdfFile.path], text: 'Invoice for Order ID: $id');
+    Share.shareXFiles(
+      [XFile(pdfFile.path)], // List of file paths
+      text: 'Invoice for Order ID: $id', // Additional text to share
+    );
+
   }
 
   Future<Uint8List> generateInvoicePdfShare(List<Item> items, double totalAmount, String date, String id, String status) async {

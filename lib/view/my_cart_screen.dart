@@ -87,13 +87,13 @@ class MyCartScreen extends StatelessWidget {
                       ] else ...[
                         SizedBox(height : MediaQuery.of(context).size.height * 0.1),
                         Image.asset('assets/images/empty_cart.png'),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         const Text(
                           'Oops! Your cart looks Empty.\nTo Start Shopping',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: primary, fontSize: 16),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                             onPressed: () {
                               navDrawerController.selectIndex(0);
@@ -106,9 +106,9 @@ class MyCartScreen extends StatelessWidget {
                                         topStart: Radius.circular(25),
                                         topEnd: Radius.circular(25),
                                         bottomStart: Radius.circular(25))))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: const Text(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
                                 'Go to Home',
                                 style: TextStyle(fontSize: 16, color: primary),
                               ),

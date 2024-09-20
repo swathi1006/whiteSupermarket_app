@@ -101,7 +101,7 @@ class HomeController extends GetxController {
     globalitems = await MongoDB.getCategoryItems(category);
     productScrollController.animateTo(
       productScrollController.offset+200,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
     //print(globalitems.length);
@@ -228,14 +228,14 @@ void setProductsBasedOnTagSearch() async{
     double newOffset = currentOffset + 350;
     productScrollController.animateTo(
       newOffset,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
   }
   void scrollUp() {
     productScrollController.animateTo(
       0, // Scroll to the top of the screen
-      duration: Duration(seconds: 1), // Change the duration as needed
+      duration: const Duration(seconds: 1), // Change the duration as needed
       curve: Curves.easeInOut, // Change the curve as needed
     );
   }

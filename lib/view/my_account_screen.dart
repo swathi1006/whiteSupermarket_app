@@ -153,7 +153,7 @@ class MyAccountScreen extends StatelessWidget {
                         children:  [
                           Text(
                             //globalorder.length.toString(),
-                            globalorder.where((order) => order['status'] != 'Delivered' && order['status'] != 'Cancelled').length.toString(),                        style: TextStyle(color: white, fontSize: 24),
+                            globalorder.where((order) => order['status'] != 'Delivered' && order['status'] != 'Cancelled').length.toString(),                        style: const TextStyle(color: white, fontSize: 24),
                           ),
                           const Text(
                             'ORDERS',
@@ -178,7 +178,7 @@ class MyAccountScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children:  [
-                          Text(globalorder.where((order) => order['status'] == 'Delivered').length.toString(),                        style: TextStyle(color: white, fontSize: 24),),
+                          Text(globalorder.where((order) => order['status'] == 'Delivered').length.toString(),                        style: const TextStyle(color: white, fontSize: 24),),
                           const Text(
                             'DELIVERED',
                             style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w500),

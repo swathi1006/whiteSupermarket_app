@@ -466,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget searchListItem(String suggestion, HomeController controller) {
     return ListTile(
       title: Text(suggestion),
-      trailing: Icon(CupertinoIcons.arrow_up_left),
+      trailing: const Icon(CupertinoIcons.arrow_up_left),
       onTap: () {
         controller.searchbarController.text = suggestion;
         controller.setProductsBasedOnTagSearch();
