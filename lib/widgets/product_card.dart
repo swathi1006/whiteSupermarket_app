@@ -259,7 +259,7 @@ class _ProductCardState extends State<ProductCard> {*/
 
   void addToCart() {
       // product.cartCount++;
-      product.cartCount.value = cartController.addItemToCart(product);
+      product.cartCount.value = cartController.addToCart(product);
   }
 
   void removeFromCart() {

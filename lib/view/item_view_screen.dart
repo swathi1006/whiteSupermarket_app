@@ -22,14 +22,11 @@ class ItemViewScreen extends StatefulWidget {
 }
 
 class _ItemViewScreenState extends State<ItemViewScreen> {
-
-
   final ItemViewController controller = Get.find<ItemViewController>();
   final MyAccountController myAccountController = Get.find();
   final CartController cartController = Get.find();
   final HomeController homeController = Get.find();
   final NavDrawerController navDrawerController = Get.find();
-
 
   @override
   void initState() {
@@ -49,12 +46,17 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(controller.selectedProduct.value!.item_name,style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w400, fontSize: 18)),
+          title: Text(controller.selectedProduct.value!.item_name,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18)),
           actions: [
             Flexible(
               child: IconButton(
                 onPressed: () {
-                  Share.share('${controller.selectedProduct.value!.item_name} at Price ₹${controller.selectedProduct.value!.offer_price} only on White CloudSupermarket App. Download the app now. https://play.google.com/store/apps/');
+                  Share.share(
+                      '${controller.selectedProduct.value!.item_name} at Price ₹${controller.selectedProduct.value!.offer_price} only on White CloudSupermarket App. Download the app now. https://play.google.com/store/apps/');
                 },
                 icon: const Icon(
                   Icons.share,
@@ -72,7 +74,7 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                   height: 36,
                   width: 25,
                   child: Obx(
-                        () => Stack(
+                    () => Stack(
                       children: [
                         Align(
                           alignment: Alignment.center,
@@ -89,8 +91,13 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                             alignment: Alignment.topRight,
                             child: Container(
                               padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(color: secondary,shape: BoxShape.circle),
-                              child: Text('${cartController.cart.length}',style: const TextStyle(fontSize: 12,color: Colors.black,fontWeight: FontWeight.bold)),
+                              decoration: const BoxDecoration(
+                                  color: secondary, shape: BoxShape.circle),
+                              child: Text('${cartController.cart.length}',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
                             ),
                           ),
                       ],
@@ -104,8 +111,10 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
         ),
         floatingActionButton: DraggableFab(
           child: Container(
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.transparent),
-            padding: const EdgeInsets.only(left:4,right:4,top:4,bottom:30),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: Colors.transparent),
+            padding:
+                const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 30),
             child: FloatingActionButton(
               backgroundColor: primary,
               onPressed: () {
@@ -114,7 +123,7 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100.0),
               ),
-              child: const Icon(Icons.call,color: Colors.white),
+              child: const Icon(Icons.call, color: Colors.white),
             ),
           ),
         ),
@@ -138,11 +147,20 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed: controller.selectedProduct.value!.instock_outstock_indication == 0 ? null : () {
-                          controller.selectedProduct.value!.cartCount.value =
-                              cartController.removeItemFromCart(controller.selectedProduct.value!);
-                          controller.update();
-                        },
+                        onPressed: controller.selectedProduct.value!
+                                    .instock_outstock_indication ==
+                                0
+                            ? null
+                            : () {
+                                // Decrement the product count in the UI only
+                                if (controller.selectedProduct.value!.cartCount
+                                        .value >
+                                    0) {
+                                  controller
+                                      .selectedProduct.value!.cartCount.value--;
+                                  controller.update(); // Update UI
+                                }
+                              },
                         icon: const Icon(
                           Icons.remove,
                           color: white,
@@ -153,7 +171,7 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                         child: Center(
                           child: Obx(
                             () => Text(
-                              '${controller.selectedProduct.value!.cartCount}',
+                              '${controller.selectedProduct.value!.cartCount}', // Shows the count on the UI
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
@@ -164,53 +182,163 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed:controller.selectedProduct.value!.instock_outstock_indication == 0? (){
-                          createToast('This product is temporarily out of stock', Colors.red);
-                        } : () {
-                          controller.selectedProduct.value!.cartCount.value =
-                              cartController.addItemToCart(controller.selectedProduct.value!);
-                          controller.update();
-                        },
+                        onPressed: controller.selectedProduct.value!
+                                    .instock_outstock_indication ==
+                                0
+                            ? () {
+                                createToast(
+                                    'This product is temporarily out of stock',
+                                    Colors.red);
+                              }
+                            : () {
+                                // Increment the product count in the UI only
+                                controller
+                                    .selectedProduct.value!.cartCount.value++;
+                                controller.update(); // Update UI
+                              },
                         icon: const Icon(
                           Icons.add,
                           color: white,
-
                         ),
                       ),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: controller.selectedProduct.value!.instock_outstock_indication == 0?(){
-                      createToast('This product is temporarily out of stock',Colors.red);
-                    }: () {
-                      controller.selectedProduct.value!.cartCount.value =
-                          cartController.addItemToCart(controller.selectedProduct.value!);
-                      // controller.update();
-                    },
-                    child: Container(
-                      color: secondary,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/logo/whitelogo.svg',
-                              height: 14,
-                              color: white,
 
-                            ),
-                            const SizedBox(width: 5,),
-                            const Text('Add to Cart',style:TextStyle(color: white,fontSize: 15,fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: [
+                //       IconButton(
+                //         onPressed: controller.selectedProduct.value!.instock_outstock_indication == 0 ? null : () {
+                //           controller.selectedProduct.value!.cartCount.value =
+                //               cartController.removeItemFromCart(controller.selectedProduct.value!);
+                //           controller.update();
+                //         },
+                //         icon: const Icon(
+                //           Icons.remove,
+                //           color: white,
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: 30,
+                //         child: Center(
+                //           child: Obx(
+                //             () => Text(
+                //               '${controller.selectedProduct.value!.cartCount}',
+                //               style: const TextStyle(
+                //                 fontSize: 24,
+                //                 fontWeight: FontWeight.w700,
+                //                 color: Colors.white,
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       IconButton(
+                //         onPressed:controller.selectedProduct.value!.instock_outstock_indication == 0? (){
+                //           createToast('This product is temporarily out of stock', Colors.red);
+                //         } : () {
+                //           controller.selectedProduct.value!.cartCount.value =
+                //               cartController.addItemToCart(controller.selectedProduct.value!);
+                //           controller.update();
+                //         },
+                //         icon: const Icon(
+                //           Icons.add,
+                //           color: white,
+
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+
+                Expanded(
+  child: GestureDetector(
+    onTap: controller.selectedProduct.value!.instock_outstock_indication == 0
+      ? () {
+          createToast('This product is temporarily out of stock', Colors.red);
+        }
+      : () {
+          // Ensure the cart count is at least 1 before adding to cart
+          cartController.addToCart(controller.selectedProduct.value!);
+          createToast('Product added to cart successfully', Colors.green);
+          controller.update(); // Refresh UI after adding to cart
+        },
+    child: Container(
+      color: secondary,
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/logo/whitelogo.svg',
+              height: 14,
+              color: white,
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              'Add to Cart',
+              style: TextStyle(
+                color: white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ),
+),
+
+
+                // Expanded(
+                //   child: GestureDetector(
+                //     onTap: controller.selectedProduct.value!
+                //                 .instock_outstock_indication ==
+                //             0
+                //         ? () {
+                //             createToast(
+                //                 'This product is temporarily out of stock',
+                //                 Colors.red);
+                //           }
+                //         : () {
+                //             controller.selectedProduct.value!.cartCount.value =
+                //                 cartController.addToCart(
+                //                     controller.selectedProduct.value!);
+                //             // controller.update();
+                //           },
+                //     child: Container(
+                //       color: secondary,
+                //       alignment: Alignment.center,
+                //       child: Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             SvgPicture.asset(
+                //               'assets/logo/whitelogo.svg',
+                //               height: 14,
+                //               color: white,
+                //             ),
+                //             const SizedBox(
+                //               width: 5,
+                //             ),
+                //             const Text('Add to Cart',
+                //                 style: TextStyle(
+                //                     color: white,
+                //                     fontSize: 15,
+                //                     fontWeight: FontWeight.w600)),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -227,22 +355,27 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(15.0),
-                        child: (controller.selectedProduct.value!.item_image.toLowerCase() == "imgurl")
+                        child: (controller.selectedProduct.value!.item_image
+                                    .toLowerCase() ==
+                                "imgurl")
                             ? Image.asset(
                                 "assets/images/garam_masala.png",
                                 fit: BoxFit.fitWidth,
                               )
                             : Container(
-                          padding: const EdgeInsets.all(20.0),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20.0), // Adjust the value as needed
-                                  child: Image.memory(base64Decode(controller.selectedProduct.value!.item_image),
+                                padding: const EdgeInsets.all(20.0),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0), // Adjust the value as needed
+                                    child: Image.memory(
+                                      base64Decode(controller
+                                          .selectedProduct.value!.item_image),
                                       fit: BoxFit.fitWidth,
                                     ),
+                                  ),
                                 ),
                               ),
-                            ),
                       ),
                       Container(
                         decoration: const BoxDecoration(
@@ -251,7 +384,7 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20.0,
-                           vertical: 30.0,
+                            vertical: 30.0,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +394,8 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      controller.selectedProduct.value!.item_name,
+                                      controller
+                                          .selectedProduct.value!.item_name,
                                       overflow: TextOverflow.fade,
                                       style: const TextStyle(
                                         color: black,
@@ -278,12 +412,16 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                               Row(
                                 children: [
                                   Container(
-                                    decoration:  BoxDecoration(
+                                    decoration: BoxDecoration(
                                       color: secondary,
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left:40.0,right: 40.0,top: 2.0,bottom: 2.0),
+                                      padding: const EdgeInsets.only(
+                                          left: 40.0,
+                                          right: 40.0,
+                                          top: 2.0,
+                                          bottom: 2.0),
                                       child: Text(
                                         "₹${controller.selectedProduct.value!.offer_price}",
                                         style: const TextStyle(
@@ -294,7 +432,9 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 10.0,),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
                                   Text(
                                     "₹${controller.selectedProduct.value!.item_mrp}",
                                     style: const TextStyle(
@@ -315,31 +455,34 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                   color: black54,
                                 ),
                               ),
-
-                              controller.selectedProduct.value!.instock_outstock_indication == 0?
-                              const Column(
-                                children: [
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Text(
-                                    "Temporarily Out of Stock",
-                                    style: TextStyle(
-                                      color: Colors.red,
+                              controller.selectedProduct.value!
+                                          .instock_outstock_indication ==
+                                      0
+                                  ? const Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 5.0,
+                                        ),
+                                        Text(
+                                          "Temporarily Out of Stock",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const Text(
+                                      "",
+                                      style: TextStyle(
+                                        color: green,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ): const Text(
-                                "",
-                                style: TextStyle(
-                                  color: green,
-                                ),
-                              ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
-                                controller.selectedProduct.value!.item_discription,
+                                controller
+                                    .selectedProduct.value!.item_discription,
                                 style: const TextStyle(
                                   color: black54,
                                   fontWeight: FontWeight.w400,
@@ -390,16 +533,21 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                       Row(
                                         children: List.generate(5, (index) {
                                           Color color = primary;
-                                          double review = controller.selectedProduct.value!.customerReview;
+                                          double review = controller
+                                              .selectedProduct
+                                              .value!
+                                              .customerReview;
                                           int fullStars = review.floor();
-                                          bool hasHalfStar = review - fullStars > 0;
+                                          bool hasHalfStar =
+                                              review - fullStars > 0;
                                           if (index < fullStars) {
                                             return Icon(
                                               Icons.star,
                                               color: color,
                                               size: 15,
                                             );
-                                          } else if (hasHalfStar && index == fullStars) {
+                                          } else if (hasHalfStar &&
+                                              index == fullStars) {
                                             return Icon(
                                               Icons.star_half,
                                               color: color,
@@ -418,79 +566,117 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                   ),
                                 ],
                               ),
-
                               Container(
-                                  child: myAccountController.defaultAddress.value == null
-                                      ?
-                                  Column(
-                                    children: [
-                                      const SizedBox(height: 20.0,),
-                                      GestureDetector(
-                                        onTap: () {
-                                          myAccountController.showMyAddressesOverLay();
-                                        },
-                                        child: Center(
-                                          child: Container(
-                                            width: MediaQuery.of(context).size.width*.85,
-                                              decoration: BoxDecoration(
-                                                color: greylight,
-                                                borderRadius: BorderRadius.circular(5.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Center(child: Text('ADD ADDRESS',style: TextStyle(color: primary, fontWeight: FontWeight.w500,))),
-                                              ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                    :Column(
-                                    children: [
-                                      const SizedBox(height: 10.0,),
-                                      const Divider(
-                                        color: black26,
-                                        height: 10.0,
-                                        thickness: 2.0,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  child: myAccountController
+                                              .defaultAddress.value ==
+                                          null
+                                      ? Column(
                                           children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  myAccountController.defaultAddress.value!.name,
-                                                ),
-                                                Text(
-                                                  '${myAccountController.defaultAddress.value!.addressLine1}, ${myAccountController.defaultAddress.value!.addressLine2}',
-                                                ),
-                                                Text(
-                                                  '${myAccountController.defaultAddress.value!.city}-${myAccountController.defaultAddress.value!.pincode}',
-                                                ),
-                                                Text(
-                                                  myAccountController.defaultAddress.value!.state,
-                                                ),
-                                                //const SizedBox(height: 10),
-                                                Text(
-                                                  '+91${myAccountController.defaultAddress.value!.mobile}',
-                                                ),
-                                              ],
+                                            const SizedBox(
+                                              height: 20.0,
                                             ),
-                                            ElevatedButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor: MaterialStateProperty.all(Colors.white), // Set the background color to red
+                                            GestureDetector(
+                                              onTap: () {
+                                                myAccountController
+                                                    .showMyAddressesOverLay();
+                                              },
+                                              child: Center(
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .85,
+                                                  decoration: BoxDecoration(
+                                                    color: greylight,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0),
+                                                  ),
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    child: Center(
+                                                        child: Text(
+                                                            'ADD ADDRESS',
+                                                            style: TextStyle(
+                                                              color: primary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ))),
+                                                  ),
                                                 ),
-                                                onPressed: () {
-                                                  myAccountController.showMyAddressesOverLay();
-                                                },
-                                                child: const Text('Change',style: TextStyle(color: primary),)),
+                                              ),
+                                            ),
                                           ],
-                                        ),
-                                        /*Padding(
+                                        )
+                                      : Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            const Divider(
+                                              color: black26,
+                                              height: 10.0,
+                                              thickness: 2.0,
+                                            ),
+                                            SizedBox(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        myAccountController
+                                                            .defaultAddress
+                                                            .value!
+                                                            .name,
+                                                      ),
+                                                      Text(
+                                                        '${myAccountController.defaultAddress.value!.addressLine1}, ${myAccountController.defaultAddress.value!.addressLine2}',
+                                                      ),
+                                                      Text(
+                                                        '${myAccountController.defaultAddress.value!.city}-${myAccountController.defaultAddress.value!.pincode}',
+                                                      ),
+                                                      Text(
+                                                        myAccountController
+                                                            .defaultAddress
+                                                            .value!
+                                                            .state,
+                                                      ),
+                                                      //const SizedBox(height: 10),
+                                                      Text(
+                                                        '+91${myAccountController.defaultAddress.value!.mobile}',
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  ElevatedButton(
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white), // Set the background color to red
+                                                      ),
+                                                      onPressed: () {
+                                                        myAccountController
+                                                            .showMyAddressesOverLay();
+                                                      },
+                                                      child: const Text(
+                                                        'Change',
+                                                        style: TextStyle(
+                                                            color: primary),
+                                                      )),
+                                                ],
+                                              ),
+                                              /*Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -532,41 +718,45 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                                     ],
                                   ),
                                 ),*/
-                                      ),
-                                      const Divider(
-                                        color: black26,
-                                        thickness: 2.0,
-                                        height: 10.0,
-                                      ),
-                                      const SizedBox(height: 20.0,),
-                                      const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.local_shipping,
-                                            color: blue,
-                                          ),
-                                          SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text("FREE Delivery Available"),
-                                        ],
-                                      ),
-                                      const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.payments,
-                                            color: green,
-                                          ),
-                                          SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text("Cash On Delivery Available"),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20.0,),
-                                    ],
-                                  )),
-
+                                            ),
+                                            const Divider(
+                                              color: black26,
+                                              thickness: 2.0,
+                                              height: 10.0,
+                                            ),
+                                            const SizedBox(
+                                              height: 20.0,
+                                            ),
+                                            const Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.local_shipping,
+                                                  color: blue,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text("FREE Delivery Available"),
+                                              ],
+                                            ),
+                                            const Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.payments,
+                                                  color: green,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text(
+                                                    "Cash On Delivery Available"),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 20.0,
+                                            ),
+                                          ],
+                                        )),
                             ],
                           ),
                         ),
@@ -592,7 +782,9 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                       ? LiveSliverGrid.options(
                           itemBuilder: buildAnimatedItem,
                           controller: controller.scrollController,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 6 / 7),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, childAspectRatio: 6 / 7),
                           itemCount: controller.gridChildren.length,
                           // shrinkWrap: true,
                           // physics: const NeverScrollableScrollPhysics(),
@@ -618,20 +810,24 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
                           ),
                         )
                       : const SliverToBoxAdapter(
-                    child: SizedBox(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 20),
-                            CircularProgressIndicator(color: primary,),
-                            SizedBox(height: 20),
-                            Text('Loading...',),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                          child: SizedBox(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 20),
+                                  CircularProgressIndicator(
+                                    color: primary,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Loading...',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
                 },
               ),
             ],
@@ -642,7 +838,8 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
   }
 
   // Build animated item (helper for all examples)
-  Widget buildAnimatedItem(BuildContext context, int i, Animation<double> animation) =>
+  Widget buildAnimatedItem(
+          BuildContext context, int i, Animation<double> animation) =>
       // For example wrap with fade transition
       FadeTransition(
         key: UniqueKey(),
@@ -658,8 +855,9 @@ class _ItemViewScreenState extends State<ItemViewScreen> {
           ).animate(animation),
           // Paste you Widget
           child: Container(
-            color: greylight,
-              child: ProductCard(controller.gridChildren[i], cartController, controller, true)),
+              color: greylight,
+              child: ProductCard(controller.gridChildren[i], cartController,
+                  controller, true)),
         ),
       );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whitesupermarketapp/widgets/toast_message.dart';
 import '../database/mongo.dart';
 import '../modal/product.dart';
 
@@ -73,4 +74,32 @@ class CartController extends GetxController {
     cart.clear();
     calculateCartTotal();
   }
+
+ int addToCart(Product p) {
+  Product? product = cart.firstWhereOrNull((element) => element.id == p.id);
+  
+  // Check if the product count is 0, set it to 1 when adding to cart
+  if (p.cartCount.value == 0) {
+    p.cartCount.value = 1; 
+  }
+  
+  if (product != null) {
+    // Update the quantity in the cart based on the UI count
+    final index = cart.indexWhere((element) => element.id == p.id);
+    cart[index].cartCount.value = p.cartCount.value;
+    calculateCartTotal(); // Update cart total
+    updateCartItem(p.id, cart[index].cartCount.value);
+    return cart[index].cartCount.value;
+  } else {
+    // Add the product to the cart if not already present
+    cart.add(p);
+    addCartItem(p);
+    calculateCartTotal();
+    return p.cartCount.value;
+  }
+}
+
+
+
+
 }
