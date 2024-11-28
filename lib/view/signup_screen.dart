@@ -304,8 +304,8 @@ class SignupScreen extends StatelessWidget {
                               }
                             },
                             style: ButtonStyle(
-                                padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
-                                shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                                padding: WidgetStateProperty.all(const EdgeInsets.all(15)),
+                                shape: WidgetStateProperty.all(const RoundedRectangleBorder(
                                     borderRadius: BorderRadiusDirectional.only(
                                         bottomEnd: Radius.circular(0),
                                         topStart: Radius.circular(0),
