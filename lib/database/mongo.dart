@@ -1,15 +1,11 @@
 
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:whitesupermarketapp/controller/my_account_controller.dart';
-import '../modal/cart.dart';
 import '../modal/order.dart';
 import '../modal/invoice.dart';
 import '../modal/product.dart';
-import '../modal/user.dart';
 import '../modal/user_address.dart';
 import 'constants.dart';
 import 'global.dart';
-import 'dart:math';
 
 class MongoDB {
   static Future<Map<String, dynamic>> connect() async {
@@ -148,8 +144,6 @@ class MongoDB {
         modify.set('user_cart.item_price', newPrice)
     );
 
-    var updatedUser = await collection_users?.findOne(
-        where.eq('_id', ObjectId.parse(UserId)));
     //print(updatedUser);
     //print('Item price updated');
   }
