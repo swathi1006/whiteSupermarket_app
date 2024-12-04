@@ -39,19 +39,38 @@ class SignupScreen extends StatelessWidget {
     resendTimer = null;
   }
 
-  sendotp() {
+  // sendotp() {
+  //   otpSent.value = false;
+  //   otp = generateOtp();
+  //   controller.sendOtp(phoneController.text,otp);
+  //   controller.resendSeconds.value = 60;
+  //   startResendTimer();
+  // }
+  //
+  //
+  // String generateOtp() {
+  //   var timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  //   return timestamp.substring(timestamp.length - 6);
+  // }
+
+  void sendotp() {
     otpSent.value = false;
-    otp = generateOtp();
-    controller.sendOtp(phoneController.text,otp);
+    otp = generateOtp(phoneController.text);
+    controller.sendOtp(phoneController.text, otp);
     controller.resendSeconds.value = 60;
     startResendTimer();
   }
 
-
-  String generateOtp() {
-    var timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    return timestamp.substring(timestamp.length - 6);
+  String generateOtp(String phoneNumber) {
+    if (phoneNumber == "8921054829") {
+      return "123456"; // Fixed OTP for the specific phone number
+    } else {
+      var timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      return timestamp.substring(timestamp.length - 6); // Generated OTP for other phone numbers
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
